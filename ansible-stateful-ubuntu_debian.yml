@@ -1,0 +1,27 @@
+---
+- hosts: all
+
+#  vars:
+    #user: francescoprovino
+
+  tasks:
+  - name: Install various basic packages
+    apt: name={{ item }} state=present
+    with_items:
+    - vim
+    - tmux
+    - mosh
+    - git
+    - zsh
+
+  - name: Clone oh-my-zsh repo
+    git: repo=https://github.com/robbyrussell/oh-my-zsh.git dest=/home/francescoprovino/.oh-my-zsh
+
+  - name: deploy .zshrc
+    template: src=files/zshrc.in dest=/home/francescoprovino/.zshrc owner=francescoprovino
+
+  - name: Set zsh as default shell
+    user: name=francescoprovino shell=/bin/zsh
+
+  - name: deploy .tmuxrc
+    template: src=files/tmux.in dest=/home/francescoprovino/.tmux.conf owner=francescoprovino
